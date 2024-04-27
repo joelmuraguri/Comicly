@@ -1,4 +1,4 @@
-package com.muraguri.comicly.core.domain.models
+package com.muraguri.comicly.core.domain.models.comics
 
 data class Character(
     val id : Int,

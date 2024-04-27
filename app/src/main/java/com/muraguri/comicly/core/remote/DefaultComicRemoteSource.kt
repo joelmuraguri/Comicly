@@ -1,5 +1,6 @@
-package com.muraguri.comicly.core.remote.repo
+package com.muraguri.comicly.core.remote
 
+import com.muraguri.comicly.core.domain.repo.ComicRemoteSource
 import com.muraguri.comicly.core.remote.ComicsService
 import com.muraguri.comicly.core.remote.models.CharactersDTO
 import com.muraguri.comicly.core.remote.models.SearchDTO

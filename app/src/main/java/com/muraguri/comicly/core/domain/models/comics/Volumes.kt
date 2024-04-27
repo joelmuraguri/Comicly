@@ -1,6 +1,6 @@
-package com.muraguri.comicly.core.domain.models
+package com.muraguri.comicly.core.domain.models.comics
 
-data class Issues(
+data class Volumes(
     val id : Int,
     val title : String,
     val image : String,
