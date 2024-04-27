@@ -7,5 +7,8 @@
     <string name="notifications_screen_title">Notifications</string>
     <string name="explore_screen_title">Explore</string>
     <string name="my_shelf_screen_title">MyShelf</string>
-
+    <string name="unavailable_internet">Voooosh!</string>
+    <string name="unavailable_internet_desc">You don\'t have an active internet connection</string>
+    <string name="unknown_error">Oooops!</string>
+    <string name="unknown_error_desc">Something went wrong. Please try again later</string>
 </resources>

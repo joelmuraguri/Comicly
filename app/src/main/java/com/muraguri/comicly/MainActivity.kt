@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -18,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.muraguri.comicly.navigation.AppNavHost
 import com.muraguri.comicly.navigation.BottomNavigationBar
 import com.muraguri.comicly.navigation.Screens
+import com.muraguri.comicly.ui.connectivity.ConnectivityObserverLayout
 import com.muraguri.comicly.ui.theme.ComiclyTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,10 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ComiclyTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
+                ConnectivityObserverLayout {
                     ComiclyApp(startDestination = Screens.Home.route)
                 }
             }
@@ -61,3 +57,4 @@ fun ComiclyApp(startDestination : String){
         }
     }
 }
+
