@@ -1,5 +1,8 @@
 package com.muraguri.comicly.core.remote
 
+import android.content.res.Resources
+import com.muraguri.comicly.core.remote.models.CharactersDTO
+import com.muraguri.comicly.core.remote.models.SearchDTO
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -7,42 +10,53 @@ import retrofit2.http.Query
 interface ComicsService {
 
 
-    @GET("/issues")
-    suspend fun fetchLatestIssues(
-        @Query("api_key") apiKey : String
-    )
-
-    @GET("issue/{id}")
-    suspend fun fetchIssuesDetailsById(
-        @Query("api_key") apiKey : String,
-        @Path("id") issueId : Int
-    )
-
-    @GET("")
+    @GET("/characters")
     suspend fun fetchCharacters(
-        @Query("api_key") apiKey : String
-    )
-
-    @GET("character/{id}")
-    suspend fun fetchCharacterDetailsById(
         @Query("api_key") apiKey : String,
-        @Path("id") characterId : Int
-    )
+        @Query("format") format: String = "json",
+        @Query("sort") sort : String = "count_of_issue_appearances"
+    ) : CharactersDTO
 
-    // Discover/Learn more
-    @GET("")
-    suspend fun fetchConcepts(
-        @Query("api_key") apiKey : String
-    )
+    @GET("/search")
+    suspend fun searchCharacter(
+        @Query("api_key") apiKey : String,
+        @Query("format") format: String = "json",
+        @Query("resources") resources: String = "character",
+        @Query("query") query: String,
+    ) : SearchDTO
 
-    @GET("/things")
-    suspend fun fetchThings(
-        @Query("api_key") apiKey : String
-    )
 
-    @GET("/locations")
-    suspend fun fetchLocations(
-        @Query("api_key") apiKey : String
-    )
+//    @GET("/issues")
+//    suspend fun fetchLatestIssues(
+//        @Query("api_key") apiKey : String
+//    )
+//
+//    @GET("issue/{id}")
+//    suspend fun fetchIssuesDetailsById(
+//        @Query("api_key") apiKey : String,
+//        @Path("id") issueId : Int
+//    )
+//
+//    @GET("character/{id}")
+//    suspend fun fetchCharacterDetailsById(
+//        @Query("api_key") apiKey : String,
+//        @Path("id") characterId : Int
+//    )
+//
+//    // Discover/Learn more
+//    @GET("")
+//    suspend fun fetchConcepts(
+//        @Query("api_key") apiKey : String
+//    )
+//
+//    @GET("/things")
+//    suspend fun fetchThings(
+//        @Query("api_key") apiKey : String
+//    )
+//
+//    @GET("/locations")
+//    suspend fun fetchLocations(
+//        @Query("api_key") apiKey : String
+//    )
 
 }

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -5,6 +7,15 @@ plugins {
     alias(libs.plugins.kapt)
     alias(libs.plugins.ksp)
 
+}
+
+val localPropertiesFile = rootProject.file("local.properties")
+val localProperties = Properties().apply {
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { stream ->
+            load(stream)
+        }
+    }
 }
 
 android {
@@ -32,6 +43,13 @@ android {
                 "proguard-rules.pro"
             )
         }
+        getByName("debug") {
+            buildConfigField("String", "COMIC_API_KEY", "\"${localProperties.getProperty("COMIC_API_KEY")}\"")
+        }
+        debug {
+            // configuration for debug builds
+            buildConfigField("boolean", "DEBUG", "true")
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -42,6 +60,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
