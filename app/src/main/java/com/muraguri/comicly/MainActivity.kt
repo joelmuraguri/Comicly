@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.muraguri.comicly.features.preference.PreferenceScreen
 import com.muraguri.comicly.navigation.AppNavHost
 import com.muraguri.comicly.navigation.BottomNavigationBar
 import com.muraguri.comicly.navigation.Screens
@@ -26,7 +27,7 @@ class MainActivity : ComponentActivity() {
             ComiclyTheme {
                 // A surface container using the 'background' color from the theme
                 ConnectivityObserverLayout {
-                    ComiclyApp(startDestination = Screens.Home.route)
+                    PreferenceScreen()
                 }
             }
         }
