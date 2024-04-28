@@ -3,14 +3,19 @@ package com.muraguri.comicly.di
 import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.muraguri.comicly.BuildConfig
+import com.muraguri.comicly.core.data.repo.DefaultComicRepository
 import com.muraguri.comicly.core.data.repo.DefaultConnectivityObserver
 import com.muraguri.comicly.core.remote.ComicsService
 import com.muraguri.comicly.core.domain.repo.ComicRemoteSource
+import com.muraguri.comicly.core.domain.repo.ComicRepository
 import com.muraguri.comicly.core.domain.repo.ConnectivityObserver
 import com.muraguri.comicly.core.domain.use_cases.CoreUseCases
+import com.muraguri.comicly.core.domain.use_cases.comics.GetCharactersUseCase
+import com.muraguri.comicly.core.domain.use_cases.comics.SearchUseCase
 import com.muraguri.comicly.core.domain.use_cases.connectivity.ConnectivityObserverUseCase
 import com.muraguri.comicly.core.remote.DefaultComicRemoteSource
 import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -21,6 +26,7 @@ interface AppDataContainer {
     val comicRemoteSource : ComicRemoteSource
     val connectivityObserver : ConnectivityObserver
     val coreUseCases : CoreUseCases
+    val comicRepository : ComicRepository
 }
 
 class DefaultAppDataContainer(
@@ -36,6 +42,7 @@ class DefaultAppDataContainer(
         .writeTimeout(10L, TimeUnit.SECONDS)
         .readTimeout(30L, TimeUnit.SECONDS)
         .addInterceptor(provideLoggingInterceptor())
+        .addInterceptor(provideUserAgentInterceptor())
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()
@@ -60,15 +67,31 @@ class DefaultAppDataContainer(
 
     override val coreUseCases: CoreUseCases by lazy {
         CoreUseCases(
-            connectivityObserverUseCases = ConnectivityObserverUseCase(connectivityObserver)
+            connectivityObserverUseCases = ConnectivityObserverUseCase(connectivityObserver),
+            getCharactersUseCase = GetCharactersUseCase(comicRepository),
+            searchUseCase = SearchUseCase(comicRepository)
         )
     }
+    override val comicRepository: ComicRepository by lazy {
+        DefaultComicRepository(comicRemoteSource)
+    }
+
     private fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         val level = if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor.Level.BODY
         } else HttpLoggingInterceptor.Level.NONE
         return HttpLoggingInterceptor().also {
             it.level = level
+        }
+    }
+
+    private fun provideUserAgentInterceptor(): Interceptor {
+        return Interceptor { chain ->
+            val originalRequest = chain.request()
+            val requestWithUserAgent = originalRequest.newBuilder()
+                .header("User-Agent", "mobile")
+                .build()
+            chain.proceed(requestWithUserAgent)
         }
     }
 }
