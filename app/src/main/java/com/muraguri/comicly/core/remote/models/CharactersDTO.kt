@@ -12,7 +12,7 @@ data class CharactersDTO(
     @SerialName("number_of_total_results")
     val totalResults: Int,
     val offset: Int,
-    val results: List<Character>,
+    val results: List<Character> = emptyList(),
     @SerialName("status_code")
     val statusCode: Int,
     val version: String
@@ -33,13 +33,13 @@ data class CharactersDTO(
         val deck: String ?= null,
         val description: String ?= null,
         @SerialName("first_appeared_in_issue")
-        val firstAppearedInIssue: FirstAppearedInIssue,
+        val firstAppearedInIssue: FirstAppearedInIssue ?= null,
         val gender: Int ?= null,
         val id: Int ?= null,
         val image: Image,
-        val name: String,
-        val origin: Origin,
-        val publisher: Publisher,
+        val name: String ?= null,
+        val origin: Origin ?= null,
+        val publisher: Publisher ?= null,
         @SerialName("real_name")
         val realName: String ?= null,
         @SerialName("site_detail_url")

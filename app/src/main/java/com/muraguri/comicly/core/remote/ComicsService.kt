@@ -1,23 +1,21 @@
 package com.muraguri.comicly.core.remote
 
-import android.content.res.Resources
 import com.muraguri.comicly.core.remote.models.CharactersDTO
 import com.muraguri.comicly.core.remote.models.SearchDTO
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ComicsService {
 
 
-    @GET("/characters")
+    @GET("characters/")
     suspend fun fetchCharacters(
         @Query("api_key") apiKey : String,
         @Query("format") format: String = "json",
         @Query("sort") sort : String = "count_of_issue_appearances"
     ) : CharactersDTO
 
-    @GET("/search")
+    @GET("search")
     suspend fun searchCharacter(
         @Query("api_key") apiKey : String,
         @Query("format") format: String = "json",
