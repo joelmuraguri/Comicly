@@ -12,7 +12,9 @@ interface ComicsService {
     suspend fun fetchCharacters(
         @Query("api_key") apiKey : String,
         @Query("format") format: String = "json",
-        @Query("sort") sort : String = "count_of_issue_appearances"
+        @Query("sort") sort : String = "count_of_issue_appearances",
+        @Query("offset") offset : Int,
+        @Query("limit") limit : Int
     ) : CharactersDTO
 
     @GET("search")
@@ -21,6 +23,8 @@ interface ComicsService {
         @Query("format") format: String = "json",
         @Query("resources") resources: String = "character",
         @Query("query") query: String,
+        @Query("offset") offset : Int,
+        @Query("limit") limit : Int
     ) : SearchDTO
 
 

@@ -9,6 +9,6 @@ interface ComicRemoteSource {
 //    suspend fun fetchIssues()
 //    suspend fun fetchVolumes()
 
-    suspend fun fetchCharacters() : CharactersDTO
-    suspend fun search(query : String) : SearchDTO
+    suspend fun fetchCharacters(offset : Int, limit :Int) : CharactersDTO
+    suspend fun search(query : String,offset : Int, limit :Int) : SearchDTO
 }

@@ -7,49 +7,109 @@ import com.muraguri.comicly.core.data.mapping.mapErrorCodeToException
 import com.muraguri.comicly.core.data.mapping.toCharacterDomain
 import com.muraguri.comicly.core.domain.models.comics.Character
 import com.muraguri.comicly.core.domain.repo.ComicRemoteSource
-import com.muraguri.comicly.core.remote.models.CharactersDTO
 import retrofit2.HttpException
 import java.io.IOException
 
+const val CHARACTER_PAGE_SIZE = 100
+private const val INITIAL_LOAD_SIZE = 0
+
+
+const val LIMIT = 100 // The number of items per page
+
 class CharactersPagingSource(
-    private val comicRemoteSource : ComicRemoteSource
-) : PagingSource<Int, Character>(){
+    private val comicRemoteSource: ComicRemoteSource
+) : PagingSource<Int, Character>() {
 
     override fun getRefreshKey(state: PagingState<Int, Character>): Int? {
-//        return state.anchorPosition
-        return state.anchorPosition?.let { position ->
-            state.closestPageToPosition(position)?.prevKey
+        return state.anchorPosition?.let { anchor ->
+            val closestPage = state.closestPageToPosition(anchor)
+            closestPage?.prevKey?.plus(1) ?: closestPage?.nextKey?.minus(1)
         }
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Character> {
-        return try {
-            val nextPage = params.key ?: 1
-            val response =  comicRemoteSource.fetchCharacters()
+        val page = params.key ?: 0 // If no key is provided, default to page 0
+        val offset = page * LIMIT // Offset increments by 100 with each page
 
-            val nextKey = if (response.results.isEmpty()) null else nextPage + 1
+        return try {
+            val response = comicRemoteSource.fetchCharacters(offset = offset, limit = LIMIT)
 
             if (response.statusCode != 1) {
-                val error = mapErrorCodeToException(response.statusCode)
-                throw error
+                throw mapErrorCodeToException(response.statusCode)
             }
 
             val mappedData = response.results.map { it.toCharacterDomain() }
 
+            // Set prevKey and nextKey
+            val prevKey = if (page == 0) null else page - 1
+            val nextKey = if (mappedData.isEmpty() || response.totalResults <= offset + LIMIT) null else page + 1
+
             LoadResult.Page(
                 data = mappedData,
-                prevKey = if (nextPage == 1) null else nextPage - 1,
+                prevKey = prevKey,
                 nextKey = nextKey
-//                prevKey = if (nextPage == 1) null else nextPage - 1,
-//                nextKey = if (response.results.isEmpty()) null else response.offset + 1
             )
-
-        } catch (e:CustomApiException){
-            return LoadResult.Error(e)
+        } catch (e : CustomApiException){
+            LoadResult.Error(e)
         } catch (e: IOException) {
-            return LoadResult.Error(e)
+            LoadResult.Error(e)
         } catch (e: HttpException) {
-            return LoadResult.Error(e)
+            LoadResult.Error(e)
+        } catch (e: Exception) {
+            LoadResult.Error(e)
         }
     }
 }
+
+
+//class CharactersPagingSource(
+//    private val comicRemoteSource : ComicRemoteSource
+//) : PagingSource<Int, Character>(){
+//
+//    override fun getRefreshKey(state: PagingState<Int, Character>): Int? {
+//        return state.anchorPosition?.let { anchor ->
+//            val closestPage = state.closestPageToPosition(anchor)
+//            closestPage?.prevKey?.plus(1) ?: closestPage?.nextKey?.minus(1)
+//        }
+//    }
+//
+//
+//
+//    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Character> {
+//        val page = params.key ?: 0 // Default to page 0 if no key is provided
+//        val limit = 100 // Default limit; adjust if needed
+//        val offset = page * limit
+//
+//
+//        return try {
+//            val response = comicRemoteSource.fetchCharacters(offset = offset, limit = limit)
+//
+//            if (response.statusCode != 1) {
+//                val error = mapErrorCodeToException(response.statusCode)
+//                throw error
+//            }
+//
+//            val mappedData = response.results.map { it.toCharacterDomain() }
+//
+//            val prevKey = if (page == 0) null else page - 100
+//            val nextKey = if (response.results.isEmpty() || response.totalResults <= offset + limit) null else page + 1
+//
+//
+//
+//            LoadResult.Page(
+//                data = mappedData,
+//                prevKey = prevKey,
+//                nextKey = nextKey
+//            )
+//        } catch (e:CustomApiException){
+//            return LoadResult.Error(e)
+//        } catch (e: Exception){
+//            LoadResult.Error(e)
+//        } catch (e: IOException) {
+//            return LoadResult.Error(e)
+//        } catch (e: HttpException) {
+//            return LoadResult.Error(e)
+//        }
+//    }
+//
+//}

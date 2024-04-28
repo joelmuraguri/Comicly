@@ -10,16 +10,20 @@ class DefaultComicRemoteSource(
     private val apiKey : String
 ) : ComicRemoteSource {
 
-    override suspend fun fetchCharacters(): CharactersDTO {
+    override suspend fun fetchCharacters(offset : Int, limit :Int): CharactersDTO {
         return service.fetchCharacters(
-            apiKey = apiKey
+            apiKey = apiKey,
+            offset = offset,
+            limit = limit
         )
     }
 
-    override suspend fun search(query: String): SearchDTO {
+    override suspend fun search(query: String,offset : Int, limit :Int): SearchDTO {
         return service.searchCharacter(
             apiKey = apiKey,
             query = query,
+            offset = offset,
+            limit = limit
         )
     }
 
