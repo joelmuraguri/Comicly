@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
             ComiclyTheme {
                 // A surface container using the 'background' color from the theme
                 ConnectivityObserverLayout {
-                    PreferenceScreen()
+                    ComiclyApp(startDestination = Screens.Preference.route)
                 }
             }
         }

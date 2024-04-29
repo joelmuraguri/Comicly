@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.muraguri.comicly.features.home.HomeScreen
+import com.muraguri.comicly.features.preference.PreferenceScreen
 import com.muraguri.comicly.features.profile.ProfileScreen
 import com.muraguri.comicly.features.search.SearchScreen
 
@@ -19,6 +20,14 @@ fun AppNavHost(
         navController = navController,
         startDestination = startDestination
     ){
+        composable(route = Screens.Preference.route){
+            updateBottomBarState(false)
+            PreferenceScreen(
+                onNavigate = {
+                    navController.navigate(Screens.Home.route)
+                }
+            )
+        }
         composable(route = Screens.Home.route){
             updateBottomBarState(true)
             HomeScreen()

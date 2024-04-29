@@ -7,4 +7,5 @@ sealed class PreferenceEvent {
     data class OnActiveChange(val active : Boolean) : PreferenceEvent()
     data class OnSearch(val query: String) : PreferenceEvent()
     data class OnUpdatedCharacter(val character : Character) : PreferenceEvent()
+    data object  OnUpdateFavCharacters : PreferenceEvent()
 }
