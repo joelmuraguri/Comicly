@@ -14,5 +14,6 @@ data class PrefScreenState(
     val error: String = "",
     val searchError: String = "",
     val query: String = "",
-    val active : Boolean = false
+    val active : Boolean = false,
+    val isSelected : Boolean = false
 )

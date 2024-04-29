@@ -53,30 +53,21 @@ class PreferenceViewModel(
                     }
                 }
             }
+            is PreferenceEvent.OnUpdatedCharacter -> {
+                val currentSelected = _state.value.selectedCharacters.toMutableList() // Create mutable copy
+                val character = event.character
+
+                if (currentSelected.contains(character)) {
+                    currentSelected.remove(character)
+                } else {
+                    currentSelected.add(character)
+                }
+                _state.value = _state.value.copy(
+                    selectedCharacters = currentSelected
+                )
+            }
         }
     }
-
-//    fun searchCharacters(query : String){
-//        viewModelScope.launch {
-//            coreUseCases.searchUseCase.invoke(query).collect{ resource ->
-//                when(resource){
-//                    is Resource.Failure -> {
-//                        _state.value = _state.value.copy(
-//                            error = resource.error.message ?: "An error occurred",
-//                            searchLoadingState = false
-//                        )
-//                    }
-//                    Resource.Loading -> {
-//                        _state.value = _state.value.copy(searchLoadingState = true, error = "")
-//                    }
-//                    is Resource.Success -> {
-//
-//                    }
-//                }
-//            }
-//        }
-//
-//    }
 
     fun getCharacters(){
         viewModelScope.launch {

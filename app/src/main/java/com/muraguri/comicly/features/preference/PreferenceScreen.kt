@@ -1,9 +1,12 @@
 package com.muraguri.comicly.features.preference
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -84,23 +87,41 @@ fun PreferenceScreen(
                         viewModel.onEvents(PreferenceEvent.OnActiveChange(it))
                     },
                     onSearch = {
-//                        viewModel.onEvents(PreferenceEvent.OnActiveChange(false))
-//                        viewModel.onEvents(PreferenceEvent.OnQueryChange(""))
                         viewModel.onEvents(PreferenceEvent.OnSearch(state.query))
                     },
                     content = {
                         if (state.error.isNotEmpty()){
                             ErrorConnection(onRetry = { viewModel.getCharacters() }, message = state.error)
                         } else {
-                            ScrollableItems(pagingItems = searchResultsPagingItems)
+                            ScrollableItems(
+                                pagingItems = searchResultsPagingItems,
+                                onClick = {
+                                    viewModel.onEvents(PreferenceEvent.OnUpdatedCharacter(it))
+                                }
+                            )
                         }
                     }
                 )
-                if (state.error.isNotEmpty()){
-                    ErrorConnection(onRetry = { viewModel.getCharacters() }, message = state.error)
+
+                if (state.selectedCharacters.isEmpty()){
+                    if (state.error.isNotEmpty()){
+                        ErrorConnection(onRetry = { viewModel.getCharacters() }, message = state.error)
+                    } else {
+                        ScrollableItems(
+                            pagingItems = charactersPagingItems,
+                            onClick = {
+                                viewModel.onEvents(PreferenceEvent.OnUpdatedCharacter(it))
+                            }
+                        )
+                    }
                 } else {
-                    ScrollableItems(pagingItems = charactersPagingItems)
-                } 
+                    SelectedCharacters(
+                        characters = state.selectedCharacters,
+                        onClick = {
+                            viewModel.onEvents(PreferenceEvent.OnUpdatedCharacter(it))
+                        }
+                    )
+                }
             }
         }
     }
@@ -108,7 +129,8 @@ fun PreferenceScreen(
 
 @Composable
 fun ScrollableItems(
-    pagingItems: LazyPagingItems<Character>
+    pagingItems: LazyPagingItems<Character>,
+    onClick: (Character) -> Unit,
 ){
 
     LazyVerticalGrid(
@@ -119,6 +141,8 @@ fun ScrollableItems(
             pagingItems[index]?.let { character ->
                 CharacterCard(
                     character = character,
+                    onClick = onClick,
+                    isSelected = false
                 )
             }
         }
@@ -188,8 +212,38 @@ fun ScrollableItems(
 
 
 @Composable
-fun CharacterCard(character: Character) {
+fun SelectedCharacters(
+    characters : List<Character>,
+    onClick: (Character) -> Unit,
+){
 
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+
+
+        items(characters.size){index ->
+            val isSelected = characters.contains(characters[index])
+            CharacterCard(
+                character = characters[index],
+                isSelected = isSelected,
+                onClick
+            )
+        }
+    }
+
+}
+
+
+@Composable
+fun CharacterCard(
+    character: Character,
+    isSelected : Boolean,
+    onClick : (Character) -> Unit
+) {
 
     Card(
         elevation = CardDefaults.elevatedCardElevation(
@@ -198,9 +252,15 @@ fun CharacterCard(character: Character) {
         modifier = Modifier
             .padding(12.dp)
             .clickable {
+                onClick(character)
             }
             .fillMaxSize()
             .height(240.dp)
+            .border(
+                3.dp,
+                if (isSelected) Color(0xFF5180f1) else Color.Transparent,
+                RoundedCornerShape(8.dp)
+            )
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -235,5 +295,6 @@ fun CharacterCard(character: Character) {
             )
         }
     }
-
 }
+
+
