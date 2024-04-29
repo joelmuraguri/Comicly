@@ -1,4 +1,4 @@
-package com.muraguri.comicly.features.myshelf
+package com.muraguri.comicly.features.profile.settings
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,15 +8,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun MyListScreen() {
+fun SettingsScreen() {
 
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
     ) {
-        Text(text = "MY LIST")
+        Text(text = "SETTINGS")
     }
-
-
 }

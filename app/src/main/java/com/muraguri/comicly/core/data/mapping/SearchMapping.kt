@@ -9,6 +9,7 @@ fun SearchDTO.Character.toSearchDomain() : Character{
         alias = aliases.orEmpty(),
         image = image.small.orEmpty(),
         siteLink = siteDetailUrl.orEmpty(),
-        name = name.orEmpty()
+        name = name.orEmpty(),
+        icon = image.icon.orEmpty()
     )
 }
