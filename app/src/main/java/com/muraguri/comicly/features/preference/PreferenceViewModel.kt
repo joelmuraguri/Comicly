@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.muraguri.comicly.core.data.mapping.toFavouriteCharacterEntity
 import com.muraguri.comicly.core.domain.use_cases.CoreUseCases
 import com.muraguri.comicly.core.domain.utils.Resource
 import kotlinx.coroutines.launch
@@ -65,6 +66,12 @@ class PreferenceViewModel(
                 _state.value = _state.value.copy(
                     selectedCharacters = currentSelected
                 )
+            }
+            PreferenceEvent.OnUpdateFavCharacters -> {
+                viewModelScope.launch {
+                    val favCharacters = _state.value.selectedCharacters.map { it.toFavouriteCharacterEntity() }
+                    coreUseCases.updateFavCharactersUseCase(favCharacters)
+                }
             }
         }
     }

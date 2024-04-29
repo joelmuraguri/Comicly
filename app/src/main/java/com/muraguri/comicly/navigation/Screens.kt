@@ -4,6 +4,11 @@ import com.muraguri.comicly.R
 
 sealed class Screens(val route: String, val icon: Int ?= null, val title: Int) {
 
+    data object Preference : Screens(
+        route = "preference_route",
+        icon = null,
+        title =  R.string.pref_screen_title
+    )
     data object Home : Screens(
         route = "home_route",
         icon = R.drawable.round_home_24,
