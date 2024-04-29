@@ -100,6 +100,7 @@ dependencies {
 
     //coil
     implementation(libs.coil.compose)
+    implementation(libs.landscapist.coil)
 
     // OkHttp
     implementation(libs.okhttp)

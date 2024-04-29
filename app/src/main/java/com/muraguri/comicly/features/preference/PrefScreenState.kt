@@ -11,5 +11,6 @@ data class PrefScreenState(
     val selectedCharacters: List<Character> = emptyList(),
     val loadingState: Boolean = false,
     val error: String = "",
-    val query: String = ""
+    val query: String = "",
+    val active : Boolean = false
 )

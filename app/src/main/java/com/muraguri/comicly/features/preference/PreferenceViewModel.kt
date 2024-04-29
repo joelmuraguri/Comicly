@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.muraguri.comicly.core.domain.use_cases.CoreUseCases
 import com.muraguri.comicly.core.domain.utils.Resource
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 class PreferenceViewModel(
@@ -18,6 +17,21 @@ class PreferenceViewModel(
 
     init {
         getCharacters()
+    }
+
+    fun onEvents(event: PreferenceEvent){
+        when(event){
+            is PreferenceEvent.OnActiveChange -> {
+                _state.value = _state.value.copy(
+                    active = event.active
+                )
+            }
+            is PreferenceEvent.OnQueryChange -> {
+                _state.value = _state.value.copy(
+                    query = event.query
+                )
+            }
+        }
     }
 
     fun getCharacters(){
