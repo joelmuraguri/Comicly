@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.serialization)
-    alias(libs.plugins.kapt)
     alias(libs.plugins.ksp)
 
 }
@@ -117,6 +116,12 @@ dependencies {
     implementation (libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
     testImplementation (libs.androidx.paging.common)
+
+    //room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    annotationProcessor(libs.room.compiler)
+    ksp(libs.room.compiler)
 
 
 }
