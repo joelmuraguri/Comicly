@@ -23,9 +23,7 @@ import com.muraguri.comicly.ui.theme.ComiclyTheme
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
-    BottomAppBar(
-        containerColor = Color.White
-    ) {
+    BottomAppBar() {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 
@@ -45,7 +43,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                         Icon(
                             painter = painterResource(id = destination.icon!!),
                             contentDescription = stringResource(id = destination.title),
-                            tint = if (selected) Color(0xFF00B969) else Color(0xFF082D54)
+                            tint = if (selected) Color(0xFF5180f1) else Color.White
                         )
                     }
                 },
