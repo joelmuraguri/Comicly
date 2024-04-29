@@ -10,9 +10,12 @@ import com.muraguri.comicly.core.domain.repo.ComicRemoteSource
 import com.muraguri.comicly.core.domain.repo.ComicRepository
 import com.muraguri.comicly.core.domain.repo.ConnectivityObserver
 import com.muraguri.comicly.core.domain.use_cases.CoreUseCases
+import com.muraguri.comicly.core.domain.use_cases.comics.FetchFavCharactersUseCase
 import com.muraguri.comicly.core.domain.use_cases.comics.GetCharactersUseCase
 import com.muraguri.comicly.core.domain.use_cases.comics.SearchUseCase
+import com.muraguri.comicly.core.domain.use_cases.comics.UpdateFavCharactersUseCase
 import com.muraguri.comicly.core.domain.use_cases.connectivity.ConnectivityObserverUseCase
+import com.muraguri.comicly.core.local.db.ComiclyDatabase
 import com.muraguri.comicly.core.remote.DefaultComicRemoteSource
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
@@ -69,11 +72,16 @@ class DefaultAppDataContainer(
         CoreUseCases(
             connectivityObserverUseCases = ConnectivityObserverUseCase(connectivityObserver),
             getCharactersUseCase = GetCharactersUseCase(comicRepository),
-            searchUseCase = SearchUseCase(comicRepository)
+            searchUseCase = SearchUseCase(comicRepository),
+            fetchFavCharactersUseCase = FetchFavCharactersUseCase(comicRepository),
+            updateFavCharactersUseCase = UpdateFavCharactersUseCase(comicRepository)
         )
     }
     override val comicRepository: ComicRepository by lazy {
-        DefaultComicRepository(comicRemoteSource)
+        DefaultComicRepository(
+            remoteSource = comicRemoteSource,
+            favCharacterDao = ComiclyDatabase.getDatabase(context).favouriteCharacterDao()
+        )
     }
 
     private fun provideLoggingInterceptor(): HttpLoggingInterceptor {

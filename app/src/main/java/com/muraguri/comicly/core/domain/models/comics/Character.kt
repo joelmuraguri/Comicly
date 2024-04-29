@@ -5,5 +5,6 @@ data class Character(
     val name : String,
     val alias : String,
     val image : String,
-    val siteLink : String
+    val siteLink : String,
+    val icon : String
 )
