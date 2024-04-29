@@ -10,7 +10,9 @@ data class PrefScreenState(
     val searchResults: Flow<PagingData<Character>> = emptyFlow(),
     val selectedCharacters: List<Character> = emptyList(),
     val loadingState: Boolean = false,
+    val searchLoadingState: Boolean = false,
     val error: String = "",
+    val searchError: String = "",
     val query: String = "",
     val active : Boolean = false
 )

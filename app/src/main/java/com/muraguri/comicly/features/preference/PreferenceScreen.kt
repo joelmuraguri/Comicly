@@ -82,6 +82,18 @@ fun PreferenceScreen(
                     active = state.active,
                     onActiveChange = {
                         viewModel.onEvents(PreferenceEvent.OnActiveChange(it))
+                    },
+                    onSearch = {
+//                        viewModel.onEvents(PreferenceEvent.OnActiveChange(false))
+//                        viewModel.onEvents(PreferenceEvent.OnQueryChange(""))
+                        viewModel.onEvents(PreferenceEvent.OnSearch(state.query))
+                    },
+                    content = {
+                        if (state.error.isNotEmpty()){
+                            ErrorConnection(onRetry = { viewModel.getCharacters() }, message = state.error)
+                        } else {
+                            ScrollableItems(pagingItems = searchResultsPagingItems)
+                        }
                     }
                 )
                 if (state.error.isNotEmpty()){

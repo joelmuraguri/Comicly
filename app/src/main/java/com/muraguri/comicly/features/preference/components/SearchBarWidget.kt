@@ -1,12 +1,11 @@
 package com.muraguri.comicly.features.preference.components
 
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,8 +27,9 @@ fun SearchWidget(
     onQueryChange : (String) -> Unit,
     active : Boolean,
     onActiveChange : (Boolean) -> Unit,
+    onSearch : () -> Unit,
+    content: @Composable ColumnScope.() -> Unit,
 ){
-
 
 
     val items = remember {
@@ -44,9 +44,7 @@ fun SearchWidget(
             onQueryChange(it)
         },
         onSearch = {
-            items.add(query)
-            onActiveChange(false)
-            onQueryChange("")
+            onSearch()
         },
         active = active,
         onActiveChange = {
@@ -96,20 +94,7 @@ fun SearchWidget(
             } else {
                 MaterialTheme.colorScheme.surfaceContainerLow
             },
-        )
-    ) {
-        items.forEach {
-
-            Row(
-                modifier = Modifier.padding(all= 14.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Refresh, contentDescription = null,
-                    modifier = Modifier.padding(end = 14.dp)
-                )
-                Text(text = it)
-            }
-
-        }
-    }
+        ),
+        content = content
+    )
 }

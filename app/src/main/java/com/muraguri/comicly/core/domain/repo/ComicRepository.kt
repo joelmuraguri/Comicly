@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ComicRepository {
     suspend fun fetchCharacters() : Flow<Resource<Flow<PagingData<Character>>>>
-    suspend fun search(query : String) : Flow<PagingData<Character>>
+    suspend fun search(query : String) : Flow<Resource<Flow<PagingData<Character>>>>
 }

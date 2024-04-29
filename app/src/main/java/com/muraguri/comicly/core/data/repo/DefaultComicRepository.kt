@@ -35,13 +35,20 @@ class DefaultComicRepository(
         }
     }
 
-    override suspend fun search(query: String): Flow<PagingData<Character>> {
-        return Pager(
-            config = PagingConfig(enablePlaceholders = false, pageSize = 20),
-            pagingSourceFactory = {
-                SearchPagingSource(comicRemoteSource = remoteSource, query = query)
-            }
-        ).flow
+    override suspend fun search(query: String): Flow<Resource<Flow<PagingData<Character>>>> {return flow {
+        try {
+            emit(Resource.Loading)
+            val pagingDataFlow = Pager(
+                config = PagingConfig(enablePlaceholders = false, pageSize = 20),
+                pagingSourceFactory = { SearchPagingSource(comicRemoteSource = remoteSource, query = query) }
+            ).flow
+            emit(Resource.Success(pagingDataFlow))
+        } catch (e: CustomApiException) {
+            emit(Resource.Failure(e))
+        } catch (e: Exception) {
+            emit(Resource.Failure(e))
+        }
+    }
 
     }
 }

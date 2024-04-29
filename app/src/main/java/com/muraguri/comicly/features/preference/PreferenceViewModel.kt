@@ -31,8 +31,52 @@ class PreferenceViewModel(
                     query = event.query
                 )
             }
+            is PreferenceEvent.OnSearch -> {
+                viewModelScope.launch {
+                    coreUseCases.searchUseCase.invoke(event.query).collect{ resource ->
+                        when(resource){
+                            is Resource.Failure -> {
+                                _state.value = _state.value.copy(
+                                    searchError = resource.error.message ?: "An error occurred",
+                                    searchLoadingState = false
+                                )
+                            }
+                            Resource.Loading -> {
+                                _state.value = _state.value.copy(searchLoadingState = true, searchError = "")
+                            }
+                            is Resource.Success -> {
+                                _state.value = _state.value.copy(
+                                    searchResults = resource.data
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
+
+//    fun searchCharacters(query : String){
+//        viewModelScope.launch {
+//            coreUseCases.searchUseCase.invoke(query).collect{ resource ->
+//                when(resource){
+//                    is Resource.Failure -> {
+//                        _state.value = _state.value.copy(
+//                            error = resource.error.message ?: "An error occurred",
+//                            searchLoadingState = false
+//                        )
+//                    }
+//                    Resource.Loading -> {
+//                        _state.value = _state.value.copy(searchLoadingState = true, error = "")
+//                    }
+//                    is Resource.Success -> {
+//
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
 
     fun getCharacters(){
         viewModelScope.launch {
