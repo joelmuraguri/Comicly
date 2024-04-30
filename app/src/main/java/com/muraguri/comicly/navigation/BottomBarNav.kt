@@ -23,7 +23,9 @@ import com.muraguri.comicly.ui.theme.ComiclyTheme
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
-    BottomAppBar() {
+    BottomAppBar(
+        containerColor = Color(0xFF1D1D2A)
+    ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentDestination = navBackStackEntry?.destination
 
@@ -32,20 +34,11 @@ fun BottomNavigationBar(navController: NavHostController) {
             NavigationBarItem(
                 selected = selected,
                 icon = {
-                    Box(
-                        modifier = Modifier.size(37.dp),
-//                            .background(
-////                                color = if (selected) Color(0xFF00B969) else Color.Transparent,
-//                                shape = RoundedCornerShape(10.dp)
-//                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = destination.icon!!),
-                            contentDescription = stringResource(id = destination.title),
-                            tint = if (selected) Color(0xFF5180f1) else Color.White
-                        )
-                    }
+                    Icon(
+                        painter = painterResource(id = destination.icon!!),
+                        contentDescription = stringResource(id = destination.title),
+                        tint = if (selected) Color(0xFF5180f1) else Color.White
+                    )
                 },
                 label = {  },
                 alwaysShowLabel = true,
@@ -59,13 +52,6 @@ fun BottomNavigationBar(navController: NavHostController) {
                         }
                     }
                 },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.White,
-                    unselectedIconColor = Color(0xFF00B969),
-                    selectedTextColor = Color(0xFF00B969),
-                    unselectedTextColor = Color(0xFF00B969),
-                    indicatorColor = Color.White
-                )
             )
         }
     }
