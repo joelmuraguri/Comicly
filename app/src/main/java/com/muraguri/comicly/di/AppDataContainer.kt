@@ -12,6 +12,7 @@ import com.muraguri.comicly.core.domain.repo.ConnectivityObserver
 import com.muraguri.comicly.core.domain.use_cases.CoreUseCases
 import com.muraguri.comicly.core.domain.use_cases.comics.FetchFavCharactersUseCase
 import com.muraguri.comicly.core.domain.use_cases.comics.GetCharactersUseCase
+import com.muraguri.comicly.core.domain.use_cases.comics.GetIssuesUseCase
 import com.muraguri.comicly.core.domain.use_cases.comics.SearchUseCase
 import com.muraguri.comicly.core.domain.use_cases.comics.UpdateFavCharactersUseCase
 import com.muraguri.comicly.core.domain.use_cases.connectivity.ConnectivityObserverUseCase
@@ -74,7 +75,8 @@ class DefaultAppDataContainer(
             getCharactersUseCase = GetCharactersUseCase(comicRepository),
             searchUseCase = SearchUseCase(comicRepository),
             fetchFavCharactersUseCase = FetchFavCharactersUseCase(comicRepository),
-            updateFavCharactersUseCase = UpdateFavCharactersUseCase(comicRepository)
+            updateFavCharactersUseCase = UpdateFavCharactersUseCase(comicRepository),
+            getIssuesUseCase = GetIssuesUseCase(comicRepository)
         )
     }
     override val comicRepository: ComicRepository by lazy {

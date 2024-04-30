@@ -1,8 +1,10 @@
 package com.muraguri.comicly.features.preference
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +44,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,9 +54,11 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.muraguri.comicly.R
 import com.muraguri.comicly.core.domain.models.comics.Character
+import com.muraguri.comicly.core.domain.models.comics.Issue
 import com.muraguri.comicly.di.ViewModelFactory
 import com.muraguri.comicly.features.preference.components.SearchWidget
 import com.muraguri.comicly.ui.connectivity.components.ErrorConnection
+import com.muraguri.comicly.utils.trimTitle
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.ShimmerParams
 import com.skydoves.landscapist.coil.CoilImage
@@ -90,11 +99,11 @@ fun PreferenceScreen(
                     containerColor = Color(0xFF5180f1)
                 ),
                 modifier = Modifier
-                    .padding(vertical = 12.dp)
+                    .padding(20.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceAround
+                    horizontalArrangement = Arrangement.SpaceAround,
                 ) {
                     Text(
                         text = "Start",
@@ -133,6 +142,8 @@ fun PreferenceScreen(
                                 pagingItems = searchResultsPagingItems,
                                 onClick = {
                                     viewModel.onEvents(PreferenceEvent.OnUpdatedCharacter(it))
+                                    viewModel.onEvents(PreferenceEvent.OnActiveChange(false))
+                                    viewModel.onEvents(PreferenceEvent.OnQueryChange(""))
                                 }
                             )
                         }
@@ -176,6 +187,7 @@ fun PreferenceScreen(
 fun ScrollableItems(
     pagingItems: LazyPagingItems<Character>,
     onClick: (Character) -> Unit,
+    landscape : Boolean = false
 ){
 
     LazyVerticalGrid(
@@ -184,10 +196,13 @@ fun ScrollableItems(
     ) {
         items(pagingItems.itemCount){ index ->
             pagingItems[index]?.let { character ->
-                CharacterCard(
+                CharacterItem(
                     character = character,
                     onClick = onClick,
-                    isSelected = false
+                    isSelected = false,
+                    modifier = Modifier
+                        .width(if (landscape) 215.dp else 130.dp)
+                        .height(if (landscape) 161.25.dp else 195.dp),
                 )
             }
         }
@@ -260,6 +275,7 @@ fun ScrollableItems(
 fun SelectedCharacters(
     characters : List<Character>,
     onClick: (Character) -> Unit,
+    landscape: Boolean = false
 ){
 
     LazyVerticalGrid(
@@ -271,10 +287,13 @@ fun SelectedCharacters(
 
         items(characters.size){index ->
             val isSelected = characters.contains(characters[index])
-            CharacterCard(
+            CharacterItem(
                 character = characters[index],
                 isSelected = isSelected,
-                onClick
+                onClick = onClick,
+                modifier = Modifier
+                    .width(if (landscape) 215.dp else 130.dp)
+                    .height(if (landscape) 161.25.dp else 195.dp),
             )
         }
     }
@@ -337,6 +356,69 @@ fun CharacterCard(
                     .padding(8.dp),
                 fontWeight = FontWeight.ExtraBold
             )
+        }
+    }
+}
+
+
+@Composable
+fun CharacterItem(
+    modifier: Modifier,
+    landscape: Boolean = false,
+    character: Character,
+    isSelected : Boolean,
+    onClick : (Character) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .wrapContentHeight()
+            .padding(all = 4.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onClick(character)
+            }
+            .border(
+                3.dp,
+                if (isSelected) Color(0xFF5180f1) else Color.Transparent,
+                RoundedCornerShape(8.dp)
+            ),
+        horizontalAlignment = Alignment.Start
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            CoilImage(
+                imageModel = character.image,
+                shimmerParams = ShimmerParams(
+                    baseColor = Color(0xFF180E36),
+                    highlightColor = Color(0XFF423460),
+                    durationMillis = 500,
+                    dropOff = 0.65F,
+                    tilt = 20F
+                ),
+                failure = {
+
+                },
+                contentScale = ContentScale.Crop,
+                circularReveal = CircularReveal(duration = 1000),
+                modifier = modifier.clip(RoundedCornerShape(8.dp)),
+                contentDescription = "Movie item"
+            )
+
+
+            Text(
+                text = character.name,
+                color = Color.White,
+                modifier = Modifier
+                    .background(Color(0x80000000))
+                    .padding(8.dp),
+                fontWeight = FontWeight.ExtraBold
+            )
+
         }
     }
 }

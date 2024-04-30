@@ -1,6 +1,7 @@
 package com.muraguri.comicly.core.remote
 
 import com.muraguri.comicly.core.remote.models.CharactersDTO
+import com.muraguri.comicly.core.remote.models.IssuesDTO
 import com.muraguri.comicly.core.remote.models.SearchDTO
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,10 +13,18 @@ interface ComicsService {
     suspend fun fetchCharacters(
         @Query("api_key") apiKey : String,
         @Query("format") format: String = "json",
-        @Query("sort") sort : String = "count_of_issue_appearances",
+        @Query("sort") sort : String = "count_of_issue_appearances:desc",
         @Query("offset") offset : Int,
         @Query("limit") limit : Int
     ) : CharactersDTO
+    @GET("issues")
+    suspend fun fetchIssues(
+        @Query("api_key") apiKey : String,
+        @Query("format") format: String = "json",
+        @Query("sort") sort : String = "date_last_updated:desc",
+        @Query("offset") offset : Int,
+        @Query("limit") limit : Int
+    ) : IssuesDTO
 
     @GET("search")
     suspend fun searchCharacter(

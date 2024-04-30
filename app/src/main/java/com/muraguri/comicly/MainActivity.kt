@@ -28,7 +28,7 @@ class MainActivity : ComponentActivity() {
             ComiclyTheme {
                 // A surface container using the 'background' color from the theme
                 ConnectivityObserverLayout {
-                    ComiclyApp(startDestination = Screens.Preference.route)
+                    ComiclyMainApp(Screens.Preference.route)
                 }
             }
         }
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun ComiclyApp(startDestination : String){
+fun ComiclyMainApp(startDestination : String){
     val navController = rememberNavController()
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
