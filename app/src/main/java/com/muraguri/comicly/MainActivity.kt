@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.muraguri.comicly.features.home.HomeScreen
 import com.muraguri.comicly.features.preference.PreferenceScreen
 import com.muraguri.comicly.navigation.AppNavHost
 import com.muraguri.comicly.navigation.BottomNavigationBar
