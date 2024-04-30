@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.muraguri.comicly.ComiclyApp
+import com.muraguri.comicly.features.home.HomeViewModel
 import com.muraguri.comicly.features.preference.PreferenceViewModel
 import com.muraguri.comicly.ui.connectivity.ConnectivityObserverViewModel
 
@@ -18,6 +19,11 @@ object ViewModelFactory {
         }
         initializer {
             PreferenceViewModel(
+                coreUseCases = comiclyApplication().container.coreUseCases
+            )
+        }
+        initializer {
+            HomeViewModel(
                 coreUseCases = comiclyApplication().container.coreUseCases
             )
         }
