@@ -1,8 +1,11 @@
 package com.muraguri.comicly.core.data.mapping
 
 import com.muraguri.comicly.core.domain.models.comics.Character
+import com.muraguri.comicly.core.domain.models.comics.CharacterInfo
 import com.muraguri.comicly.core.local.entity.FavCharacter
+import com.muraguri.comicly.core.remote.models.CharacterInfoDTO
 import com.muraguri.comicly.core.remote.models.CharactersDTO
+import com.muraguri.comicly.core.remote.models.IssuesDTO
 
 fun CharactersDTO.Character.toCharacterDomain() : Character{
     return Character(
@@ -23,3 +26,4 @@ fun Character.toFavouriteCharacterEntity() : FavCharacter{
         image = image
     )
 }
+

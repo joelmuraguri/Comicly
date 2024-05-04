@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.muraguri.comicly.R
@@ -44,12 +45,14 @@ import com.muraguri.comicly.features.home.components.ScrollableIssueItems
 import com.muraguri.comicly.features.preference.PreferenceEvent
 import com.muraguri.comicly.features.preference.ScrollableItems
 import com.muraguri.comicly.ui.connectivity.components.ErrorConnection
+import com.muraguri.comicly.utils.ComiclyEvents
 import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = viewModel(factory = ViewModelFactory.Factory)
+    homeViewModel: HomeViewModel = viewModel(factory = ViewModelFactory.Factory),
+    onNavigate : (ComiclyEvents.Navigate) -> Unit
 ) {
 
     val allFavCharacters by homeViewModel.favCharactersList.collectAsState()
@@ -59,6 +62,16 @@ fun HomeScreen(
     val state = homeViewModel.state.value
     val allNewComics = homeViewModel.state.value.allNewComics.collectAsLazyPagingItems()
 
+    LaunchedEffect(key1 = true) {
+        homeViewModel.uiEvents.collect { event ->
+            when (event) {
+                is ComiclyEvents.Navigate -> {
+                    onNavigate(event)
+                }
+                else -> {}
+            }
+        }
+    }
 
     LaunchedEffect(key1 = selectedTabIndex) {
         pagerState.animateScrollToPage(selectedTabIndex)
@@ -87,7 +100,12 @@ fun HomeScreen(
                 )
             }
         }
-        FavouritesCarousel(characters = allFavCharacters)
+        FavouritesCarousel(
+            characters = allFavCharacters,
+            onClick = { character ->
+                homeViewModel.onEvents(HomeEvents.OnCharacterClick(character))
+            }
+        )
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -110,7 +128,8 @@ fun HomeScreen(
 
 @Composable
 fun FavouritesCarousel(
-    characters : List<FavCharacter>
+    characters : List<FavCharacter>,
+    onClick: (FavCharacter) -> Unit
 ){
 
     LazyRow(
@@ -125,9 +144,12 @@ fun FavouritesCarousel(
         }
         items(characters){character ->
             FavCharacterIcon(
-                imageUrl = character.icon,
+                favCharacter = character,
                 imageSize = 80.dp,
-                name = character.name
+                name = character.name,
+                onClick = {
+                    onClick(character)
+                }
             )
         }
     }

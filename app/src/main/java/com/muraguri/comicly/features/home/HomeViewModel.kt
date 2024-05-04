@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.muraguri.comicly.core.domain.use_cases.CoreUseCases
 import com.muraguri.comicly.core.domain.utils.Resource
 import com.muraguri.comicly.core.local.entity.FavCharacter
+import com.muraguri.comicly.navigation.Screens
 import com.muraguri.comicly.utils.ComiclyEvents
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +31,17 @@ class HomeViewModel(
     init {
         fetchFavouriteCharacters()
         fetchNewComics()
+    }
+
+    fun onEvents(events: HomeEvents){
+        when(events){
+            is HomeEvents.OnCharacterClick -> {
+                viewModelScope.launch {
+                    _uiEvents.send(ComiclyEvents.Navigate(Screens.CharacterInfo.route + "?characterId=${events.character.id}"))
+                }
+            }
+            is HomeEvents.OnIssueClick -> TODO()
+        }
     }
 
     private fun fetchFavouriteCharacters(){

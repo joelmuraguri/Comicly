@@ -123,5 +123,8 @@ dependencies {
     annotationProcessor(libs.room.compiler)
     ksp(libs.room.compiler)
 
+    //mockk
+    testImplementation(libs.mockk)
+
 
 }

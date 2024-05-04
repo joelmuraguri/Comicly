@@ -10,6 +10,7 @@ import com.muraguri.comicly.core.domain.repo.ComicRemoteSource
 import com.muraguri.comicly.core.domain.repo.ComicRepository
 import com.muraguri.comicly.core.domain.repo.ConnectivityObserver
 import com.muraguri.comicly.core.domain.use_cases.CoreUseCases
+import com.muraguri.comicly.core.domain.use_cases.comics.FetchCharacterInfoUseCase
 import com.muraguri.comicly.core.domain.use_cases.comics.FetchFavCharactersUseCase
 import com.muraguri.comicly.core.domain.use_cases.comics.GetCharactersUseCase
 import com.muraguri.comicly.core.domain.use_cases.comics.GetIssuesUseCase
@@ -76,13 +77,16 @@ class DefaultAppDataContainer(
             searchUseCase = SearchUseCase(comicRepository),
             fetchFavCharactersUseCase = FetchFavCharactersUseCase(comicRepository),
             updateFavCharactersUseCase = UpdateFavCharactersUseCase(comicRepository),
-            getIssuesUseCase = GetIssuesUseCase(comicRepository)
+            getIssuesUseCase = GetIssuesUseCase(comicRepository),
+            fetchCharacterInfoUseCase = FetchCharacterInfoUseCase(comicRepository)
         )
     }
     override val comicRepository: ComicRepository by lazy {
         DefaultComicRepository(
             remoteSource = comicRemoteSource,
-            favCharacterDao = ComiclyDatabase.getDatabase(context).favouriteCharacterDao()
+            favCharacterDao = ComiclyDatabase.getDatabase(context).favouriteCharacterDao(),
+            apiKey = BuildConfig.COMIC_API_KEY,
+            service = retrofitService
         )
     }
 

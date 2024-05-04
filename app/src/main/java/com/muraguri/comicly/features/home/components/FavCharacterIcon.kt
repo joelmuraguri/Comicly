@@ -39,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.muraguri.comicly.core.domain.models.comics.Issue
+import com.muraguri.comicly.core.local.entity.FavCharacter
 import com.muraguri.comicly.utils.trimTitle
 import com.skydoves.landscapist.CircularReveal
 import com.skydoves.landscapist.ShimmerParams
@@ -46,30 +47,44 @@ import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
 fun FavCharacterIcon(
-    imageUrl : String,
+    favCharacter: FavCharacter,
     imageSize : Dp,
-    name : String
+    name : String,
+    onClick: (FavCharacter) -> Unit
 ){
 
-    CoilImage(
-        imageModel = imageUrl,
-        shimmerParams = ShimmerParams(
-            baseColor = Color(0xFF180E36),
-            highlightColor = Color(0XFF423460),
-            durationMillis = 500,
-            dropOff = 0.65F,
-            tilt = 20F
-        ),
-        failure = {
-        },
-        contentScale = ContentScale.Crop,
-        circularReveal = CircularReveal(duration = 1000),
+    Column(
         modifier = Modifier
-            .border(2.dp, Color(0xFF5180f1), shape = CircleShape)
-            .size(imageSize)
-            .clip(CircleShape),
-        contentDescription = name
-    )
+            .wrapContentHeight()
+            .padding(all = 4.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onClick(favCharacter)
+            },
+        horizontalAlignment = Alignment.Start
+    ) {
+        CoilImage(
+            imageModel = favCharacter.image,
+            shimmerParams = ShimmerParams(
+                baseColor = Color(0xFF180E36),
+                highlightColor = Color(0XFF423460),
+                durationMillis = 500,
+                dropOff = 0.65F,
+                tilt = 20F
+            ),
+            failure = {
+            },
+            contentScale = ContentScale.Crop,
+            circularReveal = CircularReveal(duration = 1000),
+            modifier = Modifier
+                .border(2.dp, Color(0xFF5180f1), shape = CircleShape)
+                .size(imageSize)
+                .clip(CircleShape),
+            contentDescription = name
+        )
+    }
 
 }
 

@@ -6,3 +6,11 @@ data class Issue(
     val image : String,
     val siteLink : String
 )
+
+
+data class IssueInfo(
+    val id : Int,
+    val name : String,
+    val imageUrl : String,
+    val deck : String,
+)

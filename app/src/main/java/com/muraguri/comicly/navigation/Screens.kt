@@ -2,6 +2,9 @@ package com.muraguri.comicly.navigation
 
 import com.muraguri.comicly.R
 
+const val CHARACTER_ARGUMENT_KEY = "characterId"
+const val ISSUE_ARGUMENT_KEY = "issueId"
+
 sealed class Screens(val route: String, val icon: Int ?= null, val title: Int) {
 
     data object Preference : Screens(
@@ -43,6 +46,11 @@ sealed class Screens(val route: String, val icon: Int ?= null, val title: Int) {
         route = "profile_route",
         icon = R.drawable.round_person_24,
         title = R.string.profile_screen_title
+    )
+    data object CharacterInfo : Screens(
+        route = "character_info_route",
+        icon = null,
+        title = R.string.character_info_screen_title
     )
 
 }

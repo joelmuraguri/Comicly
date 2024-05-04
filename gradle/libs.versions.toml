@@ -12,6 +12,7 @@ composeBom = "2024.04.01"
 ksp = "1.9.22-1.0.18"
 coil = "2.6.0"
 kotlinx-serialization-json = "1.6.3"
+mockk = "1.9.3"
 pagingCompose = "3.3.0-beta01"
 pagingRuntime = "3.2.1"
 retrofit2KotlinxSerializationConverter = "1.0.0"
@@ -22,7 +23,7 @@ timber = "5.0.1"
 composeNavigation = "2.7.7"
 accompanist_version = "0.27.0"
 contentAlpha = "1.6.6"
-retrofit = "2.9.0"
+retrofit = "2.11.0"
 okhttp = "4.12.0"
 
 [libraries]
@@ -46,6 +47,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 coil-compose = { group="io.coil-kt", name="coil-compose", version.ref="coil"}
 landscapist-coil = { module = "com.github.skydoves:landscapist-coil", version.ref = "landscapistVersion" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 retrofit-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
